@@ -7,7 +7,7 @@
 function initAudio() {
   const FADE_STEP_MS = 30;
   const MUSIC_MAX_VOLUME = 0.50;
-  const CARD_SOUND_MAX_MS = 0.3;
+  const CARD_SOUND_MAX_MS = 300;
 
   const sounds = {
     seal: new Audio('audio/seal.mp3'),
