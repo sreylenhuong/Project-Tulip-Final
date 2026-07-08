@@ -6,7 +6,8 @@ function initCards({
   nextButton,
   previousZone,
   nextZone,
-  indicator
+  indicator,
+  audio
 }) {
   let current = 0;
   let isCardTurning = false;
@@ -71,6 +72,7 @@ function initCards({
     if (current < cards.length - 1) {
       isCardTurning = true;
       stage.dataset.nav = 'next';
+      audio?.playCardSlide();
       current += 1;
       updateCards();
 
@@ -90,6 +92,7 @@ function initCards({
     if (current > 0) {
       isCardTurning = true;
       stage.dataset.nav = 'prev';
+      audio?.playCardSlide();
       current -= 1;
       updateCards();
 

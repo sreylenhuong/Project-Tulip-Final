@@ -8,7 +8,8 @@ document.addEventListener('DOMContentLoaded', () => {
   const nextZone = document.getElementById('nextZone');
   const indicator = document.getElementById('indicator');
 
-  const folder = initFolder({ stage, openButton });
+  const audio = initAudio();
+  const folder = initFolder({ stage, openButton, audio });
 
   initCards({
     stage,
@@ -18,7 +19,8 @@ document.addEventListener('DOMContentLoaded', () => {
     nextButton,
     previousZone,
     nextZone,
-    indicator
+    indicator,
+    audio
   });
 
   initCountdown({

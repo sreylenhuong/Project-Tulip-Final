@@ -6,7 +6,7 @@
   - Covers are never hidden after opening, because re-showing hidden 3D layers
     is what made the right cover glitch during close on iPhone.
 */
-function initFolder({ stage, openButton }) {
+function initFolder({ stage, openButton, audio }) {
   const OPEN_PRESS_DELAY = 220;
   const CARD_READY_DELAY = 80;
   const CLOSING_REPAINT_DELAY = 34;
@@ -58,6 +58,8 @@ function initFolder({ stage, openButton }) {
     const leftCover = stage.querySelector('.left-cover');
     const rightCover = stage.querySelector('.right-cover');
 
+    audio?.playSeal();
+
     stage.classList.add('is-opening');
     stage.classList.remove('is-ready', 'is-closing', 'is-preparing-close');
 
@@ -68,6 +70,7 @@ function initFolder({ stage, openButton }) {
     window.setTimeout(async () => {
       await twoPaints();
 
+      audio?.playFolderOpen();
       stage.classList.add('is-open');
       openButton.setAttribute('aria-expanded', 'true');
 
@@ -81,6 +84,7 @@ function initFolder({ stage, openButton }) {
       window.setTimeout(() => {
         stage.classList.add('is-ready');
         stage.classList.remove('is-opening');
+        audio?.startMusic();
       }, CARD_READY_DELAY);
     }, OPEN_PRESS_DELAY);
   }
@@ -92,6 +96,7 @@ function initFolder({ stage, openButton }) {
     const rightCover = stage.querySelector('.right-cover');
 
     openButton.setAttribute('aria-expanded', 'false');
+    audio?.stopMusic();
 
     // Remove card-ready state first so the card layer freezes.
     // Keep is-open on while closing so the cards remain physically inside
