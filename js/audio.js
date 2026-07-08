@@ -26,7 +26,7 @@ function initAudio() {
   sounds.music.preload = 'auto';
   sounds.music.loop = true;
 
-  sounds.seal.volume = 0.2;
+  sounds.seal.volume = 0.02;
   sounds.folderOpen.volume = 0;
   sounds.cardSlide.volume = 0.18;
   sounds.music.volume = 0;
