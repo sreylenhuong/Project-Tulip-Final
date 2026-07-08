@@ -59,6 +59,7 @@ function initFolder({ stage, openButton, audio }) {
     const rightCover = stage.querySelector('.right-cover');
 
     audio?.playSeal();
+    audio?.startMusic();
 
     stage.classList.add('is-opening');
     stage.classList.remove('is-ready', 'is-closing', 'is-preparing-close');
@@ -69,7 +70,7 @@ function initFolder({ stage, openButton, audio }) {
 
     window.setTimeout(async () => {
       await twoPaints();
-      
+
       stage.classList.add('is-open');
       openButton.setAttribute('aria-expanded', 'true');
 
@@ -83,7 +84,7 @@ function initFolder({ stage, openButton, audio }) {
       window.setTimeout(() => {
         stage.classList.add('is-ready');
         stage.classList.remove('is-opening');
-        audio?.startMusic();
+        
       }, CARD_READY_DELAY);
     }, OPEN_PRESS_DELAY);
   }

@@ -11,7 +11,7 @@ function initAudio() {
 
   const sounds = {
     seal: new Audio('audio/seal.mp3'),
-    
+
     cardSlide: new Audio('audio/paper-slide.mp3'),
     music: new Audio('audio/music.m4r')
   };
@@ -112,7 +112,7 @@ function initAudio() {
   }
 
   function startMusic() {
-    fadeMusicTo(MUSIC_MAX_VOLUME, 2400);
+    fadeMusicTo(MUSIC_MAX_VOLUME, 1200);
   }
 
   function stopMusic() {
