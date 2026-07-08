@@ -394,7 +394,7 @@
 .invitation-emphasis {
   margin-top: clamp(22px, calc(var(--card-w) * 0.0927), 25px) !important;
   margin-bottom: clamp(30px, calc(var(--card-w) * 0.2915), 40px) !important;
-  font-size: clamp(1.8rem, calc(var(--card-w) * 0.0606), 2.5rem) !important;
+  font-size: clamp(2rem, calc(var(--card-w) * 0.0706), 2.5rem) !important;
   line-height: 1.08 !important;
   color: rgba(78, 48, 40, .98) !important;
 }
@@ -481,7 +481,7 @@
   display: grid;
   margin: 30px auto 0;
   line-height: 2;
-  gap: clamp(20px, calc(var(--card-w) * 0.0768), 30px);
+  gap: clamp(35px, calc(var(--card-w) * 0.0968), 40px);
   padding-block: clamp(3px, calc(var(--card-w) * 0.0098), 6px);
 }
 
@@ -489,7 +489,7 @@
   content: "";
   position: absolute;
   top: clamp(20px, calc(var(--card-w) * 0.0693), 30px);
-  bottom: clamp(9px, calc(var(--card-w) * 0.0293), 13px);
+  bottom: clamp(35px, calc(var(--card-w) * 0.0993), 45px);
   left: calc(clamp(4.65rem, calc(var(--card-w) * 0.2195), 5.55rem) + clamp(7px, calc(var(--card-w) * 0.0207), 10px));
   width: 1px;
   background: linear-gradient(180deg, transparent, rgba(184, 126, 100, .48) 10%, rgba(184, 126, 100, .56) 90%, transparent);

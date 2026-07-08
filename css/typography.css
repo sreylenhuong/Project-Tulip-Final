@@ -166,7 +166,7 @@ h2,
 }
 
 .details-body .ceremony-time {
-  font-size: clamp(7.5rem, calc(var(--card-w) * 1.4), 9.5rem) !important;
+  font-size: clamp(8.5rem, calc(var(--card-w) * 1.4), 9.5rem) !important;
 }
 
 .timeline-title {
@@ -179,16 +179,17 @@ h2,
 }
 
 .venue-location {
-  font-size: clamp(.96rem, calc(var(--card-w) * 0.037), 1.5rem) !important;
+  font-size: clamp(1.16rem, calc(var(--card-w) * 0.047), 1.5rem) !important;
   line-height: 1.2;
 }
 
 .finding-title {
-  font-size: clamp(.92rem, calc(var(--card-w) * 0.044), 1.24rem) !important;
+  font-size: clamp(1.02rem, calc(var(--card-w) * 0.044), 1.74rem) !important;
 }
 
 .venue-card .finding-us p {
-  font-size: clamp(.89rem, calc(var(--card-w) * 0.037), 1.5rem);
+  margin: 7px 7px 0;
+  font-size: clamp(.99rem, calc(var(--card-w) * 0.047), 1.5rem);
   line-height: 1.34;
 }
 

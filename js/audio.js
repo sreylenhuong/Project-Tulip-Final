@@ -27,7 +27,7 @@ function initAudio() {
   sounds.music.loop = true;
 
   sounds.seal.volume = 0.42;
-  sounds.folderOpen.volume = 0.08;
+  sounds.folderOpen.volume = 0.05;
   sounds.cardSlide.volume = 0.18;
   sounds.music.volume = 0;
 
