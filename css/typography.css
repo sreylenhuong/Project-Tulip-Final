@@ -171,7 +171,7 @@ h2,
 
 .timeline-title {
   font-size: clamp(.88rem, calc(var(--card-w) * 0.038), 1rem) !important;
-  line-height: 2;
+  line-height: 3;
 }
 
 .timeline-time {
@@ -184,7 +184,7 @@ h2,
 }
 
 .finding-title {
-  margin: 20px 25px;
+  margin: 35px 25px;
   font-size: clamp(1.02rem, calc(var(--card-w) * 0.044), 1.74rem) !important;
 }
 
