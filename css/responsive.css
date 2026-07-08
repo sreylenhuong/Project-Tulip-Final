@@ -345,38 +345,3 @@
       will-change: transform, opacity;
     }
 
-    /* Lighter paper rendering on iPhone to reduce paint/compositing pressure. */
-    .card {
-      background:
-        radial-gradient(ellipse at 18% 12%, rgba(255,255,255,.64) 0%, rgba(255,255,255,0) 34%),
-        radial-gradient(ellipse at 82% 88%, rgba(229, 186, 190, .15) 0%, rgba(229, 186, 190, 0) 40%),
-        linear-gradient(145deg, #fffdf9 0%, #fff7f8 48%, #faeef1 100%);
-      border-color: rgba(196, 148, 153, .34);
-      box-shadow:
-        0 13px 26px rgba(83, 52, 55, .12),
-        0 2px 0 rgba(231, 205, 204, .72),
-        inset 0 1px 0 rgba(255,255,255,.82);
-      contain: layout paint;
-    }
-
-    .card::before,
-    .card.cover-card::before,
-    .image-card::before {
-      background-image: none !important;
-      background: none !important;
-      opacity: 0 !important;
-      mix-blend-mode: normal !important;
-    }
-
-    .card::after,
-    .image-card::after {
-      box-shadow: none !important;
-    }
-
-    .rings-mark,
-    .final-monogram-image {
-      filter: none !important;
-      mix-blend-mode: normal !important;
-    }
-  }
-}
