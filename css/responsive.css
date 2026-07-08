@@ -207,17 +207,14 @@
   }
 }
 
-/* ================================
-   iPhone/Safari clean animation model
-   One iPhone override only.
+/* Mobile uses the same 3D cover model as desktop.
+   We keep cards flat and static, but the covers remain rotateY folds. */
 
-   Safari was glitching because the normal mobile 3D rotateY covers can flicker
-   or repaint out of order on iPhone. This block keeps the normal 3D model for
-   desktop and Android, but changes iPhone Safari to one simpler physical model:
-   - Cards become visible immediately when opening starts, but sit behind covers.
-   - Covers slide open/closed as flat physical panels.
-   - Card stack does not animate during cover movement.
-   - Cards are hidden only after both covers finish closing.
+/* ================================
+   iPhone/Safari fallback
+   - Desktop + Android keep the normal 3D folder from folder.css.
+   - iPhone uses flat sliding covers to avoid Safari 3D repaint glitches.
+   - Card paper/texture is NOT changed here, so Card 7 keeps the same look.
 ================================ */
 @supports (-webkit-touch-callout: none) {
   @media (max-width: 640px) {
@@ -245,8 +242,8 @@
       z-index: 4;
       opacity: 0;
       pointer-events: none;
-      -webkit-transform: translate3d(0, -10px, 0) scale(1);
-      transform: translate3d(0, -10px, 0) scale(1);
+      -webkit-transform: translate3d(0, -10px, 0) scale(1) !important;
+      transform: translate3d(0, -10px, 0) scale(1) !important;
       transition: opacity .22s ease;
       will-change: auto;
     }
@@ -273,7 +270,7 @@
       transform-origin: right center !important;
     }
 
-    /* Opening/ready state: cards are already inside, above the base, below covers. */
+    /* Cards are already inside the folder, above the base and below the covers. */
     .stage.is-opening .card-stack,
     .stage.is-revealed .card-stack,
     .stage.is-closing.is-open .card-stack {
@@ -292,7 +289,6 @@
       transition: none !important;
     }
 
-    /* Close finished: only after is-open is removed should the cards disappear. */
     .stage.is-closing:not(.is-open) .card-stack {
       opacity: 0 !important;
       pointer-events: none !important;
@@ -301,7 +297,7 @@
       transition: opacity .16s ease !important;
     }
 
-    /* iPhone open state: flat sliding panels instead of Safari 3D rotation. */
+    /* iPhone only: slide covers instead of rotateY. */
     .stage.is-open:not(.is-closing) .left-cover {
       -webkit-transform: translate3d(-100%, 0, 0) !important;
       transform: translate3d(-100%, 0, 0) !important;
@@ -314,7 +310,6 @@
       box-shadow: 12px 14px 24px rgba(79, 48, 38, .10) !important;
     }
 
-    /* Closing wins even while is-open remains on for card visibility. */
     .stage.is-open.is-closing .left-cover,
     .stage.is-closing .left-cover,
     .stage.is-open.is-closing .right-cover,
@@ -324,7 +319,7 @@
       box-shadow: none !important;
     }
 
-    /* Freeze card layer during folder movement to avoid Card 1 first-open flicker. */
+    /* Freeze cards only while the folder itself is opening/closing. */
     .stage.is-opening .card,
     .stage.is-open:not(.is-ready) .card,
     .stage.is-closing.is-open .card {
@@ -341,7 +336,103 @@
       transform: translate3d(0, 0, 0) scale(1) rotateZ(0deg) !important;
     }
 
+    /* iPhone card-swipe polish: keep the same paper-stack motion as desktop,
+       but write it explicitly for WebKit so Safari does not flatten the states oddly. */
     .stage.is-ready .card {
+      transition:
+        -webkit-transform .56s cubic-bezier(.18, .78, .16, 1),
+        transform .56s cubic-bezier(.18, .78, .16, 1),
+        opacity .56s cubic-bezier(.18, .78, .16, 1) !important;
       will-change: transform, opacity;
     }
 
+    .stage.is-open.is-ready .card[data-position="active"] {
+      -webkit-transform: translate3d(0, 0, 0) scale(1) rotateZ(0deg) !important;
+      transform: translate3d(0, 0, 0) scale(1) rotateZ(0deg) !important;
+      opacity: 1 !important;
+      z-index: 9;
+    }
+
+    .stage.is-open.is-ready .card[data-position="next"] {
+      -webkit-transform: translate3d(.4%, 7px, 0) scale(.982) rotateZ(.06deg) !important;
+      transform: translate3d(.4%, 7px, 0) scale(.982) rotateZ(.06deg) !important;
+      opacity: .38 !important;
+      z-index: 5;
+    }
+
+    .stage.is-open.is-ready .card[data-position="prev"] {
+      -webkit-transform: translate3d(-5.2%, 7px, 0) scale(.978) rotateZ(-.18deg) !important;
+      transform: translate3d(-5.2%, 7px, 0) scale(.978) rotateZ(-.18deg) !important;
+      opacity: .34 !important;
+      z-index: 6;
+    }
+
+    .stage.is-open.is-ready .card[data-position="hidden-next"] {
+      -webkit-transform: translate3d(.2%, 10px, 0) scale(.976) !important;
+      transform: translate3d(.2%, 10px, 0) scale(.976) !important;
+      opacity: .16 !important;
+      z-index: 3;
+    }
+
+    .stage.is-open.is-ready .card[data-position="hidden-prev"] {
+      -webkit-transform: translate3d(-6.4%, 10px, 0) scale(.972) rotateZ(-.22deg) !important;
+      transform: translate3d(-6.4%, 10px, 0) scale(.972) rotateZ(-.22deg) !important;
+      opacity: .16 !important;
+      z-index: 4;
+    }
+
+    .stage.is-open.is-ready[data-nav="next"] .card[data-position="active"] {
+      -webkit-transform: translate3d(0, -2px, 0) scale(1) rotateZ(0deg) !important;
+      transform: translate3d(0, -2px, 0) scale(1) rotateZ(0deg) !important;
+    }
+
+    .stage.is-open.is-ready[data-nav="next"] .card[data-position="prev"] {
+      -webkit-transform: translate3d(-24%, -5px, 0) scale(.994) rotateZ(-1.1deg) !important;
+      transform: translate3d(-24%, -5px, 0) scale(.994) rotateZ(-1.1deg) !important;
+      opacity: .9 !important;
+      z-index: 14;
+    }
+
+    .stage.is-open.is-ready[data-nav="prev"] .card[data-position="active"] {
+      -webkit-transform: translate3d(0, -3px, 0) scale(1) rotateZ(0deg) !important;
+      transform: translate3d(0, -3px, 0) scale(1) rotateZ(0deg) !important;
+      opacity: 1 !important;
+      z-index: 14;
+      -webkit-animation: iphone-return-card-right .56s cubic-bezier(.18, .78, .16, 1) both;
+      animation: iphone-return-card-right .56s cubic-bezier(.18, .78, .16, 1) both;
+    }
+
+    .stage.is-open.is-ready[data-nav="prev"] .card[data-position="next"] {
+      -webkit-transform: translate3d(.4%, 7px, 0) scale(.982) rotateZ(.06deg) !important;
+      transform: translate3d(.4%, 7px, 0) scale(.982) rotateZ(.06deg) !important;
+      opacity: .38 !important;
+      z-index: 5;
+    }
+  }
+}
+
+@-webkit-keyframes iphone-return-card-right {
+  0% {
+    -webkit-transform: translate3d(-24%, -5px, 0) scale(.994) rotateZ(-1.1deg);
+    transform: translate3d(-24%, -5px, 0) scale(.994) rotateZ(-1.1deg);
+    opacity: .9;
+  }
+  100% {
+    -webkit-transform: translate3d(0, -3px, 0) scale(1) rotateZ(0deg);
+    transform: translate3d(0, -3px, 0) scale(1) rotateZ(0deg);
+    opacity: 1;
+  }
+}
+
+@keyframes iphone-return-card-right {
+  0% {
+    -webkit-transform: translate3d(-24%, -5px, 0) scale(.994) rotateZ(-1.1deg);
+    transform: translate3d(-24%, -5px, 0) scale(.994) rotateZ(-1.1deg);
+    opacity: .9;
+  }
+  100% {
+    -webkit-transform: translate3d(0, -3px, 0) scale(1) rotateZ(0deg);
+    transform: translate3d(0, -3px, 0) scale(1) rotateZ(0deg);
+    opacity: 1;
+  }
+}
