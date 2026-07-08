@@ -1,0 +1,244 @@
+/* ================================
+   Project Tulip v2.2
+   Romantic typography system
+================================ */
+
+:root {
+  --font-ui: Inter, system-ui, sans-serif;
+  --font-serif: 'EB Garamond', 'Cormorant Garamond', serif;
+  --font-script: 'Alex Brush', cursive;
+}
+
+body { font-family: var(--font-ui); }
+
+h1,
+h2,
+.cover-title span,
+.countdown strong,
+#prevCard,
+#nextCard {
+  font-family: var(--font-serif);
+}
+
+/* Closed folder cover: the words are treated like ink printed into the cover. */
+.cover-title { top: 20%; }
+
+.cover-title span {
+  display: block;
+  font-size: clamp(2.35rem, calc(var(--card-w) * 0.122), 3.25rem);
+  font-weight: 600;
+  line-height: .9;
+  letter-spacing: .02em;
+  text-transform: uppercase;
+  color: rgba(112, 82, 72, .34);
+}
+
+/* Card 1: quiet luxury, with no background tulip pattern. */
+.card.cover-card {
+  justify-content: center;
+  gap: clamp(4px, calc(var(--card-w) * 0.0134), 8px);
+  padding-block: clamp(24px, calc(var(--card-w) * 0.0707), 38px);
+}
+
+.card.cover-card > * {
+  position: relative;
+  z-index: 1;
+}
+
+.card.cover-card .eyebrow {
+  margin: 0 10px clamp(6px, calc(var(--card-w) * 0.0207), 12px);
+  font-family: var(--font-serif);
+  font-size: clamp(2rem, calc(var(--card-w) * 0.0513), 2.5rem);
+  font-weight: 600;
+  letter-spacing: .22em;
+  text-transform: uppercase;
+  color: rgba(184, 137, 115, .92);
+  transform: translateY(clamp(-18px, -calc(var(--card-w) * 0.0488), -10px));
+}
+
+.name-lockup {
+  width: 100%;
+  margin-top: clamp(40px, calc(var(--card-w) * 0.0573), 32px);
+  display: grid;
+  justify-items: center;
+  align-items: center;
+  gap: 0;
+  transform: translateY(clamp(2px, calc(var(--card-w) * 0.0146), 8px));
+}
+
+.bride-name {
+  display: block;
+  width: 100%;
+  font-family: var(--font-script);
+  font-size: clamp(4.55rem, calc(var(--card-w) * 0.185), 5.1rem);
+  font-weight: 550;
+  line-height: .78;
+  color: rgba(69, 53, 47, .98);
+  text-wrap: balance;
+}
+
+.rings-mark {
+  width: clamp(34px, calc(var(--card-w) * 0.105), 46px);
+  height: auto;
+  object-fit: contain;
+  opacity: .76;
+  margin-top: clamp(12px, calc(var(--card-w) * 0.0402), 22px);
+  margin-bottom: clamp(20px, calc(var(--card-w) * 0.0293), 15px);
+}
+
+.date-lockup {
+  width: min(100%, 294px);
+  margin-top: clamp(45px, calc(var(--card-w) * 0.0573), 32px);
+  font-family: var(--font-serif);
+  color: var(--muted);
+  transform: translateY(clamp(2px, calc(var(--card-w) * 0.0110), 7px));
+}
+
+.date-main-row {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
+  align-items: center;
+  justify-items: center;
+  gap: clamp(7px, calc(var(--card-w) * 0.0293), 14px);
+}
+
+.date-side {
+  position: relative;
+  width: 100%;
+  display: grid;
+  justify-items: center;
+  text-align: center;
+  gap: clamp(4px, calc(var(--card-w) * 0.0171), 7px);
+  font-size: clamp(0.95rem, calc(var(--card-w) * 0.023), .72rem);
+  font-weight: 600;
+  letter-spacing: .15em;
+  text-transform: uppercase;
+  color: rgba(122, 89, 72, .72);
+}
+
+.date-side::before,
+.date-side::after {
+  content: "";
+  display: block;
+  width: 100%;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(170, 116, 93, .45), transparent);
+}
+
+.date-number {
+  min-width: clamp(38px, calc(var(--card-w) * 0.1220), 58px);
+  padding-inline: clamp(4px, calc(var(--card-w) * 0.0146), 7px);
+  border-inline: 1px solid rgba(170, 116, 93, .34);
+  font-size: clamp(2.65rem, calc(var(--card-w) * 0.125), 3.6rem);
+  font-weight: 500;
+  line-height: .86;
+  letter-spacing: .02em;
+  color: rgba(170, 116, 93, .88);
+}
+
+.date-year {
+  display: block;
+  margin-top: clamp(10px, calc(var(--card-w) * 0.0305), 16px);
+  font-size: clamp(1.15rem, calc(var(--card-w) * 0.041), 1.28rem);
+  font-weight: 500;
+  line-height: 1;
+  letter-spacing: .2em;
+  color: rgba(170, 116, 93, .86);
+}
+
+/* Shared readable scale for Cards 2–6.
+   These live in the base typography file so desktop and mobile inherit the same sizes.
+   responsive.css should only override them when a specific mobile layout needs protection. */
+.card p:not(.eyebrow),
+.stationery-body p {
+  font-size: clamp(1.08rem, calc(var(--card-w) * 0.049), 1.22rem);
+  line-height: 1.55;
+}
+
+.stationery-hero {
+  font-size: clamp(1.5rem, calc(var(--card-w) * 0.112), 3.35rem);
+  line-height: 1.04;
+}
+
+.card .stationery-title,
+.card.cover-card .eyebrow {
+  font-size: clamp(.82rem, calc(var(--card-w) * 0.031), .88rem);
+}
+
+.details-body .ceremony-time {
+  font-size: clamp(7rem, calc(var(--card-w) * 1.3), 8rem) !important;
+}
+
+.timeline-title {
+  font-size: clamp(.88rem, calc(var(--card-w) * 0.038), 1rem) !important;
+  line-height: 2;
+}
+
+.timeline-time {
+  font-size: clamp(1.24rem, calc(var(--card-w) * 0.052), 1.4rem) !important;
+}
+
+.venue-location {
+  font-size: clamp(.86rem, calc(var(--card-w) * 0.037), 1rem) !important;
+  line-height: 1.2;
+}
+
+.finding-title {
+  font-size: clamp(.82rem, calc(var(--card-w) * 0.034), .94rem) !important;
+}
+
+.venue-card .finding-us p {
+  font-size: clamp(.75rem, calc(var(--card-w) * 0.027), 1.5rem);
+  line-height: 1.34;
+}
+
+.thank-you-body p {
+  font-size: clamp(1.15rem, calc(var(--card-w) * 0.052), 1.28rem);
+  line-height: 1.5;
+}
+
+/* Shared stationery card typography: Cards 2–6
+   Detailed overrides live in cards.css beside the reusable card layout. */
+.stationery-number {
+  font-family: var(--font-serif);
+  font-size: clamp(1rem, calc(var(--card-w) * 0.0463), 1.18rem);
+  font-weight: 500;
+  line-height: 1;
+  letter-spacing: .1em;
+  color: var(--rose-gold);
+}
+
+/* Shared stationery signature: the CD monogram echoes the wax seal.
+   It is centred with left/right: 0 + auto margins instead of translateX.
+   This avoids Card 1's transform/animation creating an optical offset. */
+.card-signature {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: clamp(5px, calc(var(--card-w) * 0.0183), 8px);
+  width: clamp(34px, calc(var(--card-w) * 0.1098), 46px);
+  margin-inline: auto;
+  transform: none;
+  opacity: .30;
+  pointer-events: none;
+  z-index: 1;
+}
+
+.card.cover-card > .card-signature,
+.cover-card .card-signature {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: clamp(5px, calc(var(--card-w) * 0.0183), 8px);
+  margin-inline: auto;
+  transform: none;
+  z-index: 2;
+}
+
+.card-signature img {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+/* The old tulip signatures are retired in favour of the shared CD monogram. */

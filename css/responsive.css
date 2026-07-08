@@ -1,0 +1,211 @@
+/* ================================
+   Responsive refinements
+   Mobile-first polish v2.8
+================================ */
+
+@media (max-width: 640px) {
+  :root {
+    /*
+      Mobile centres the CLOSED folder/card footprint, not the opened width.
+      The base, cards, seal, and cover print all share this same anchor.
+    */
+    --card-w: min(92vw, 390px, calc((100svh - 36px) / 1.78));
+  }
+
+  html,
+  body {
+    width: 100%;
+    max-width: 100%;
+    min-height: 100svh;
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+    overscroll-behavior: none;
+  }
+
+  body {
+    position: fixed;
+    inset: 0;
+  }
+
+  .app {
+    width: 100vw;
+    height: 100svh;
+    min-height: 100svh;
+    padding: 0;
+    overflow: hidden;
+    display: grid;
+    place-items: center;
+  }
+
+  .stage {
+    width: 100vw;
+    max-width: 100vw;
+    height: 100svh;
+    max-height: 100svh;
+    overflow: hidden;
+    display: grid;
+    place-items: center;
+    -webkit-perspective: 1400px;
+    perspective: 1400px;
+  }
+
+  /*
+    Critical mobile model:
+    the folder-system is one card wide, so its centre is the real physical centre.
+    Covers still fold out from the base, but they no longer change the layout centre.
+  */
+  .folder-system {
+    width: var(--card-w);
+    height: var(--card-h);
+    -webkit-transform: translate3d(0, 0, 0) scale(1);
+    transform: translate3d(0, 0, 0) scale(1);
+  }
+
+  .stage.is-open .folder-system {
+    -webkit-transform: translate3d(0, -2px, 0) scale(1);
+    transform: translate3d(0, -2px, 0) scale(1);
+  }
+
+  .base {
+    left: 0;
+  }
+
+  .left-cover {
+    left: 0;
+    transform-origin: left center;
+  }
+
+  .right-cover {
+    right: 0;
+    transform-origin: right center;
+  }
+
+  .card-stack {
+    left: 0;
+    right: auto;
+    bottom: 0;
+    opacity: 1;
+    pointer-events: none;
+    -webkit-transform: translate3d(0, -10px, 0) scale(1);
+    transform: translate3d(0, -10px, 0) scale(1);
+    transition: none;
+  }
+
+  .stage.is-ready .card-stack {
+    pointer-events: auto;
+  }
+
+  .card {
+    left: 10px;
+    top: 10px;
+    width: calc(100% - 20px);
+    height: calc(100% - 20px);
+    padding: clamp(22px, calc(var(--card-w) * 0.0674), 30px) clamp(18px, calc(var(--card-w) * 0.0587), 26px);
+  }
+
+  .stationery-card {
+    padding-top: clamp(26px, calc(var(--card-w) * 0.0783), 34px);
+    padding-bottom: clamp(54px, calc(var(--card-w) * 0.1413), 70px);
+  }
+
+  .cover-title {
+    top: 19%;
+  }
+
+  .seal-print,
+  .seal-trigger {
+    width: clamp(98px, calc(var(--card-w) * 0.285), 116px);
+    height: clamp(98px, calc(var(--card-w) * 0.285), 116px);
+  }
+
+  .timeline-body {
+    width: min(100%, 29ch);
+    gap: clamp(10px, calc(var(--card-w) * 0.0326), 14px);
+  }
+
+
+  .map-button {
+    position: relative;
+    z-index: 60;
+    pointer-events: auto;
+    padding: .5rem .82rem;
+    font-size: clamp(.72rem, calc(var(--card-w) * 0.031), .84rem);
+  }
+
+
+  .countdown div {
+    inline-size: clamp(86px, calc(var(--card-w) * 0.2609), 104px);
+    block-size: clamp(86px, calc(var(--card-w) * 0.2609), 104px);
+  }
+
+  #prevCard { left: 8px; }
+  #nextCard { right: 8px; }
+
+  #prevCard,
+  #nextCard {
+    width: 44px;
+    height: 72px;
+    font-size: 2rem;
+  }
+
+  /* Keep mobile tap navigation on the paper edges only so links remain tappable. */
+  .card-click-zone {
+    width: min(calc(var(--card-w) * 0.2609), 96px);
+    height: var(--card-h);
+    top: 50%;
+    transform: translateY(-50%);
+  }
+
+  .prev-zone { left: calc(50% - (var(--card-w) / 2)); }
+  .next-zone { right: calc(50% - (var(--card-w) / 2)); }
+
+  #indicator {
+    bottom: 10px;
+  }
+}
+
+@media (max-width: 640px) and (orientation: landscape) {
+  :root {
+    --card-w: min(92vw, 390px, calc((100svh - 20px) / 1.78));
+  }
+
+  .card-stack {
+    -webkit-transform: translate3d(0, -4px, 0) scale(1);
+    transform: translate3d(0, -4px, 0) scale(1);
+  }
+
+  .card {
+    padding-block: clamp(16px, calc(var(--card-w) * 0.0489), 24px);
+  }
+
+  .stationery-card {
+    padding-top: clamp(18px, calc(var(--card-w) * 0.0522), 26px);
+    padding-bottom: clamp(38px, calc(var(--card-w) * 0.0978), 54px);
+  }
+
+  .venue-photo img {
+    height: clamp(88px, 24svh, 128px);
+  }
+}
+
+@media (max-width: 380px) {
+  :root {
+    --card-w: min(94vw, calc((100svh - 34px) / 1.78));
+  }
+
+  .card {
+    padding-inline: clamp(16px, calc(var(--card-w) * 0.0543), 22px);
+  }
+
+  .stationery-card {
+    padding-bottom: clamp(48px, calc(var(--card-w) * 0.1304), 62px);
+  }
+
+  .venue-photo img {
+    height: clamp(110px, 28svh, 150px);
+  }
+}
+
+/* Mobile uses the same 3D cover model as desktop.
+   We keep cards flat and static, but the covers remain rotateY folds. */

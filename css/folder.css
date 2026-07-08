@@ -1,0 +1,184 @@
+/* ================================
+   Physical folder system
+================================ */
+
+/*
+  Physical model:
+  - Base/pocket is exactly one card size.
+  - Left cover and right cover are each half card width.
+  - Closed footprint = one card size.
+  - Open footprint = left cover + base + right cover = two card widths.
+*/
+.folder-system {
+  position: relative;
+  width: var(--folder-open-w);
+  height: var(--card-h);
+  -webkit-transform-style: preserve-3d;
+  transform-style: preserve-3d;
+  -webkit-transform: translate3d(0, 6px, 0) scale(.98);
+  transform: translate3d(0, 6px, 0) scale(.98);
+  transition: transform 1s var(--ease-luxury);
+}
+
+.stage.is-open .folder-system {
+  -webkit-transform: translate3d(0, 0, 0) scale(1);
+  transform: translate3d(0, 0, 0) scale(1);
+}
+
+.base,
+.cover {
+  position: absolute;
+  top: 0;
+  height: var(--card-h);
+  border-radius: 2px;
+  isolation: isolate;
+  background:
+    radial-gradient(ellipse at 18% 10%, rgba(255,255,255,.46) 0%, rgba(255,255,255,0) 36%),
+    radial-gradient(ellipse at 84% 92%, rgba(188,112,103,.18) 0%, rgba(188,112,103,0) 38%),
+    radial-gradient(ellipse at 50% 48%, rgba(255,255,255,.16) 0%, rgba(255,255,255,0) 48%),
+    linear-gradient(180deg, #f8dfd8 0%, var(--folder-paper) 46%, var(--folder-paper-deep) 100%);
+  border: 1px solid rgba(190, 132, 116, .36);
+  overflow: hidden;
+}
+
+.base {
+  left: var(--cover-w);
+  width: var(--card-w);
+  z-index: 0;
+  overflow: visible;
+}
+
+.cover {
+  width: var(--cover-w);
+  z-index: 7;
+  -webkit-backface-visibility: hidden;
+  backface-visibility: hidden;
+  -webkit-transform-style: preserve-3d;
+  transform-style: preserve-3d;
+  transition: transform 1.58s var(--ease-fold);
+}
+
+.left-cover {
+  left: var(--cover-w);
+  transform-origin: left center;
+  -webkit-transform: rotateY(0deg);
+  transform: rotateY(0deg);
+}
+
+.right-cover {
+  right: var(--cover-w);
+  transform-origin: right center;
+  -webkit-transform: rotateY(0deg);
+  transform: rotateY(0deg);
+}
+
+.stage.is-open .left-cover {
+  -webkit-transform: rotateY(-176deg);
+  transform: rotateY(-176deg);
+}
+
+.stage.is-closing .cover {
+  transition-duration: .82s;
+}
+
+/*
+  is-open stays on while the folder closes (see folder.js), so the cards
+  stay frozen. These overrides make the covers fold back shut anyway, tied
+  purely to is-closing, regardless of is-open still being present.
+*/
+.stage.is-closing .left-cover {
+  -webkit-transform: rotateY(0deg);
+  transform: rotateY(0deg);
+}
+
+.stage.is-closing .right-cover {
+  -webkit-transform: rotateY(0deg);
+  transform: rotateY(0deg);
+}
+
+.stage.is-open .right-cover {
+  -webkit-transform: rotateY(176deg);
+  transform: rotateY(176deg);
+}
+
+/* Closing must win over the open-cover transforms.
+   This is intentionally placed after the .stage.is-open .right-cover rule,
+   because the folder keeps is-open during closing so the cards stay physically
+   inside the folder until both covers have finished folding shut. */
+.stage.is-open.is-closing .left-cover {
+  -webkit-transform: rotateY(0deg);
+  transform: rotateY(0deg);
+}
+
+.stage.is-open.is-closing .right-cover {
+  -webkit-transform: rotateY(0deg);
+  transform: rotateY(0deg);
+}
+
+/* Full cover print is clipped into two halves by the covers. */
+.cover-print {
+  position: absolute;
+  top: 0;
+  width: var(--card-w);
+  height: var(--card-h);
+  pointer-events: none;
+  -webkit-transform-style: preserve-3d;
+  transform-style: preserve-3d;
+}
+
+.left-cover .cover-print { left: 0; }
+.right-cover .cover-print { right: 0; }
+
+.cover-title {
+  position: absolute;
+  top: 31%;
+  left: 0;
+  width: 100%;
+  text-align: center;
+  pointer-events: none;
+}
+
+/* Image-based wax seal
+   The seal is a real PNG asset, while the cover halves clip it so it still
+   behaves like it is physically attached to the folder. */
+.seal-print {
+  position: absolute;
+  left: 50%;
+  top: 47%;
+  width: 112px;
+  height: 112px;
+  transform: translate(-50%, -50%);
+  pointer-events: none;
+}
+
+.seal-print img {
+  width: 100%;
+  height: 100%;
+  display: block;
+  object-fit: contain;
+}
+
+.seal-trigger {
+  position: absolute;
+  left: 50%;
+  top: 47%;
+  z-index: 24;
+  width: 116px;
+  height: 116px;
+  border: 0;
+  padding: 0;
+  border-radius: 50%;
+  background: transparent;
+  cursor: pointer;
+  transform: translate(-50%, -50%);
+}
+
+.seal-trigger:active {
+  transform: translate(-50%, -50%) scale(.96);
+}
+
+.stage.is-open .seal-trigger,
+.stage.is-closing .seal-trigger,
+.stage.is-opening .seal-trigger {
+  pointer-events: none;
+}

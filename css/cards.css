@@ -1,0 +1,790 @@
+/* ================================
+   Invitation cards and navigation
+   Cleaned v2.6.37
+================================ */
+
+.card-stack {
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  width: var(--card-w);
+  height: var(--card-h);
+  z-index: 5;
+  isolation: isolate;
+  overflow: visible;
+  opacity: 1;
+  pointer-events: none;
+  -webkit-transform: translate3d(0, -14px, 0) scale(1);
+  transform: translate3d(0, -14px, 0) scale(1);
+  transition: none;
+}
+
+.stage.is-ready .card-stack {
+  pointer-events: auto;
+}
+
+/*
+  Physical model: cards are always present inside the folder.
+  Covers conceal them while closed; the stack itself does not fade or move
+  during opening/closing, which avoids Safari layer flicker.
+*/
+.stage.is-opening .card-stack,
+.stage.is-open:not(.is-ready) .card-stack,
+.stage.is-closing .card-stack {
+  opacity: 1;
+  pointer-events: none;
+  -webkit-transform: translate3d(0, -14px, 0) scale(1);
+  transform: translate3d(0, -14px, 0) scale(1);
+  transition: none;
+}
+
+/*
+  Same idea for the individual cards: freeze their transform completely
+  while the covers are still folding shut, overriding the small "settle"
+  animation below so it can't run concurrently with the cover's rotation.
+*/
+.stage.is-closing.is-open .card[data-position] {
+  transition: none;
+}
+
+.card {
+  position: absolute;
+  left: 12px;
+  top: 12px;
+  width: calc(100% - 24px);
+  height: calc(100% - 24px);
+  padding: clamp(22px, calc(var(--card-w) * 0.0683), 36px) clamp(18px, calc(var(--card-w) * 0.0610), 32px);
+  border-radius: 5px;
+  overflow: hidden;
+  isolation: isolate;
+  background:
+    radial-gradient(ellipse at 18% 12%, rgba(255,255,255,.82) 0%, rgba(255,255,255,0) 34%),
+    radial-gradient(ellipse at 78% 86%, rgba(222,190,170,.16) 0%, rgba(222,190,170,0) 38%),
+    radial-gradient(ellipse at 48% 46%, rgba(255,255,255,.28) 0%, rgba(255,255,255,0) 46%),
+    linear-gradient(180deg, #fffefb 0%, #fffaf4 38%, #fcf5ee 72%, #f8eee5 100%);
+  border: 1px solid rgba(190,164,140,.48);
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  transform-origin: center 72%;
+  transition: transform .56s cubic-bezier(.18, .78, .16, 1);
+  -webkit-backface-visibility: hidden;
+  backface-visibility: hidden;
+  -webkit-transform: translate3d(0, 0, 0);
+  transform: translate3d(0, 0, 0);
+}
+
+.card[data-position] {
+  -webkit-transform: translate3d(0, 7px, 0) scale(.986) rotateZ(0deg);
+  transform: translate3d(0, 7px, 0) scale(.986) rotateZ(0deg);
+  opacity: .94;
+}
+
+.card[data-position="active"] { z-index: 8; }
+.card[data-position="next"] { z-index: 5; }
+.card[data-position="prev"] { z-index: 6; }
+.card[data-position="hidden-next"] { z-index: 3; }
+.card[data-position="hidden-prev"] { z-index: 4; }
+
+.stage.is-open .card[data-position="active"] {
+  -webkit-transform: translate3d(0, 0, 0) scale(1) rotateZ(0deg);
+  transform: translate3d(0, 0, 0) scale(1) rotateZ(0deg);
+  opacity: 1;
+  z-index: 9;
+}
+
+/* Card 1 no longer has its own open animation.
+   The card stack reveals once after the folder finishes opening, which prevents
+   iPhone Safari from re-triggering the first-card animation loop. */
+.stage.is-open[data-nav] .card.cover-card { animation: none; }
+
+.stage.is-open .card[data-position="next"] {
+  transform: translate3d(.4%, 7px, 0) scale(.982) rotateZ(.06deg);
+  opacity: .38;
+  z-index: 5;
+}
+
+.stage.is-open .card[data-position="prev"] {
+  transform: translate3d(-5.2%, 7px, 0) scale(.978) rotateZ(-.18deg);
+  opacity: .34;
+  z-index: 6;
+}
+
+.stage.is-open .card[data-position="hidden-next"] {
+  transform: translate3d(.2%, 10px, 0) scale(.976);
+  opacity: .16;
+  z-index: 3;
+}
+
+.stage.is-open .card[data-position="hidden-prev"] {
+  transform: translate3d(-6.4%, 10px, 0) scale(.972) rotateZ(-.22deg);
+  opacity: .16;
+  z-index: 4;
+}
+
+.stage.is-closing .card[data-position],
+.stage.is-open.is-closing .card[data-position] {
+  transform: translate3d(0, 1px, 0) scale(.994) rotateZ(0deg);
+  opacity: .96;
+  transition-duration: .26s;
+}
+
+.stage.is-open[data-nav="next"] .card[data-position="active"] {
+  transform: translate3d(0, -2px, 0) scale(1) rotateZ(0deg);
+}
+
+.stage.is-open[data-nav="next"] .card[data-position="prev"] {
+  transform: translate3d(-24%, -5px, 0) scale(.994) rotateZ(-1.1deg);
+  opacity: .9;
+  z-index: 14;
+}
+
+.stage.is-open[data-nav="prev"] .card[data-position="active"] {
+  transform: translate3d(0, -3px, 0) scale(1) rotateZ(0deg);
+  z-index: 14;
+  animation: return-card-right .56s cubic-bezier(.18, .78, .16, 1) both;
+}
+
+@keyframes return-card-right {
+  0% {
+    transform: translate3d(-24%, -5px, 0) scale(.994) rotateZ(-1.1deg);
+    opacity: .9;
+  }
+  100% {
+    transform: translate3d(0, -3px, 0) scale(1) rotateZ(0deg);
+    opacity: 1;
+  }
+}
+
+.stage.is-open[data-nav="prev"] .card[data-position="next"] {
+  transform: translate3d(.4%, 7px, 0) scale(.982) rotateZ(.06deg);
+  opacity: .38;
+  z-index: 5;
+}
+
+/* Safari/iPhone rendering guard: keep the stack flat and GPU-composited.
+   The folder covers keep the physical fold, but cards avoid nested 3D glitches. */
+.card-stack,
+.card {
+  contain: layout paint;
+}
+
+/* Navigation */
+.controls {
+  position: absolute;
+  inset: 0;
+  z-index: 30;
+  pointer-events: none;
+}
+
+.card-click-zone {
+  position: absolute;
+  top: 50%;
+  width: calc(var(--card-w) * .36);
+  height: var(--card-h);
+  transform: translateY(-50%);
+  border: 0;
+  background: transparent;
+  cursor: pointer;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.stage.is-ready:not(.is-closing) .card-click-zone { pointer-events: auto; }
+.prev-zone { left: calc(50% - (var(--card-w) / 2)); }
+.next-zone { right: calc(50% - (var(--card-w) / 2)); }
+
+#prevCard,
+#nextCard {
+  position: absolute;
+  top: 50%;
+  z-index: 32;
+  width: 44px;
+  height: 68px;
+  border: 0;
+  background: transparent;
+  color: rgba(78,58,53,.42);
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 2.2rem;
+  line-height: 1;
+  cursor: pointer;
+  opacity: 0;
+  transform: translateY(-50%);
+  transition: opacity .32s ease, transform .32s ease, color .32s ease;
+  pointer-events: none;
+}
+
+#prevCard { left: calc(50% - (var(--card-w) * .55)); }
+#nextCard { right: calc(50% - (var(--card-w) * .55)); }
+
+.stage.is-ready:not(.is-closing) #prevCard,
+.stage.is-ready:not(.is-closing) #nextCard { pointer-events: auto; }
+
+@media (hover: hover) {
+  .stage.is-ready:hover #prevCard,
+  .stage.is-ready:hover #nextCard { opacity: .58; }
+
+  #prevCard:hover,
+  #nextCard:hover {
+    opacity: .86;
+    color: rgba(78,58,53,.64);
+  }
+
+  #prevCard:hover { transform: translate(-3px, -50%); }
+  #nextCard:hover { transform: translate(3px, -50%); }
+}
+
+#indicator {
+  position: absolute;
+  left: 50%;
+  bottom: max(8px, calc(50% - (var(--card-h) / 2) - 34px));
+  transform: translateX(-50%);
+  color: rgba(78,58,53,.42);
+  font-size: .68rem;
+  letter-spacing: .18em;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity .32s ease;
+}
+
+.stage.is-ready:hover #indicator { opacity: .45; }
+
+/* Shared text defaults */
+.eyebrow {
+  margin: 0 0 22px;
+  font-size: .68rem;
+  letter-spacing: .24em;
+  text-transform: uppercase;
+  color: var(--rose-gold);
+  font-weight: 600;
+}
+
+.card p:not(.eyebrow) {
+  font-size: clamp(.78rem, calc(var(--card-w) * 0.0287), .9rem);
+  line-height: 1.55;
+  color: var(--muted);
+  max-width: 26ch;
+}
+
+.card h2 {
+  margin: 0 0 14px;
+  max-width: 13ch;
+  font-size: clamp(1.25rem, calc(var(--card-w) * 0.0610), 1.9rem);
+  line-height: 1.08;
+  font-weight: 500;
+  color: var(--ink);
+}
+
+/* Only the active top card shows printed content. */
+.card > * {
+  position: relative;
+  z-index: 2;
+  transition: opacity .22s ease;
+}
+
+.stage.is-open .card:not([data-position="active"]) > * { opacity: .001; }
+.stage.is-open .card:not([data-position="active"]) a,
+.stage.is-open .card:not([data-position="active"]) button { pointer-events: none; }
+.stage.is-open[data-nav="next"] .card[data-position="prev"] > * { opacity: 1; }
+
+/* ================================
+   Shared stationery card system
+================================ */
+
+:root {
+  --stationery-number-color: rgba(188, 128, 96, .76);
+  --stationery-title-color: var(--rose-gold);
+  --stationery-hero-color: var(--ink);
+  --stationery-body-color: var(--muted);
+  --stationery-header-gap: clamp(6px, calc(var(--card-w) * 0.0195), 9px);
+  --stationery-after-header: clamp(23px, calc(var(--card-w) * 0.0683), 33px);
+  --stationery-after-hero: clamp(20px, calc(var(--card-w) * 0.0598), 31px);
+  --stationery-body-gap: clamp(11px, calc(var(--card-w) * 0.0341), 17px);
+  --stationery-divider-top: clamp(26px, calc(var(--card-w) * 0.0780), 38px);
+  --stationery-divider-bottom: clamp(54px, calc(var(--card-w) * 0.1585), 78px);
+}
+
+.stationery-card {
+  justify-content: flex-start;
+  align-items: center;
+  gap: 0;
+  padding-top: clamp(28px, calc(var(--card-w) * 0.0854), 42px);
+  padding-bottom: clamp(62px, calc(var(--card-w) * 0.1768), 84px);
+}
+
+.stationery-header {
+  display: grid;
+  justify-items: center;
+  gap: var(--stationery-header-gap);
+  margin-bottom: var(--stationery-after-header);
+}
+
+.card .stationery-title {
+  margin: 0;
+  max-width: none;
+  font-family: var(--font-ui);
+  font-size: .68rem;
+  font-weight: 600;
+  line-height: 1;
+  letter-spacing: .24em;
+  text-transform: uppercase;
+  color: var(--stationery-title-color);
+}
+
+.stationery-hero {
+  width: min(100%, 15ch);
+  margin: 0 auto var(--stationery-after-hero);
+  font-family: var(--font-serif);
+  font-size: clamp(1.25rem, calc(var(--card-w) * 0.0610), 1.9rem);
+  font-weight: 500;
+  line-height: 1.08;
+  text-align: center;
+  color: var(--stationery-hero-color);
+  text-wrap: balance;
+}
+
+.stationery-body {
+  width: min(100%, 27ch);
+  margin-inline: auto;
+  text-align: center;
+}
+
+.stationery-body p {
+  margin: 0 auto;
+  max-width: 27ch;
+  font-family: var(--font-ui);
+  font-size: clamp(.78rem, calc(var(--card-w) * 0.0287), .9rem);
+  font-weight: 400;
+  line-height: 1.58;
+  color: var(--stationery-body-color);
+  text-align: center;
+}
+
+.stationery-body p + p,
+.stationery-body p + .stationery-emphasis,
+.stationery-body .stationery-emphasis + p { margin-top: var(--stationery-body-gap); }
+
+.stationery-emphasis {
+  font-family: var(--font-serif) !important;
+  font-size: clamp(1rem, calc(var(--card-w) * 0.0463), 1.18rem) !important;
+  font-weight: 500 !important;
+  line-height: 1.12 !important;
+  color: var(--ink) !important;
+  text-wrap: balance;
+}
+
+.stationery-divider {
+  margin-top: var(--stationery-divider-top);
+  margin-bottom: var(--stationery-divider-bottom);
+  font-size: .86rem;
+  line-height: 1;
+  letter-spacing: .22em;
+  color: rgba(188, 128, 96, .72);
+}
+
+/* Card 2: invitation message */
+.invitation-card { --stationery-body-gap: clamp(10px, calc(var(--card-w) * 0.0220), 12px); }
+.invitation-body { width: min(100%, 25ch); }
+.invitation-body p {
+  margin: 20px auto;
+  max-width: 25ch; }
+
+.invitation-emphasis {
+  margin-top: clamp(22px, calc(var(--card-w) * 0.0927), 25px) !important;
+  margin-bottom: clamp(22px, calc(var(--card-w) * 0.0915), 25px) !important;
+  font-size: clamp(1.5rem, calc(var(--card-w) * 0.0506), 2.5rem) !important;
+  line-height: 1.08 !important;
+  color: rgba(78, 48, 40, .98) !important;
+}
+
+/* Card 3: wedding details */
+.details-card { --stationery-after-hero: clamp(10px, calc(var(--card-w) * 0.0293), 15px); }
+
+.details-body {
+  display: grid;
+  justify-items: center;
+  width: min(100%, 50ch);
+  gap: clamp(5px, calc(var(--card-w) * 0.0152), 8px);
+}
+
+.details-body p { margin: 30px, 0; }
+
+.details-body .ceremony-time {
+  margin-top: clamp(20px, calc(var(--card-w) * 0.0122), 6px) !important;
+  font-family: var(--font-serif);
+  font-size: 10rem !important;
+  font-weight: 500;
+  line-height: .72 !important;
+  letter-spacing: -.04em !important;
+  color: rgba(112, 70, 54, .98) !important;
+}
+
+.detail-day {
+  margin-top: clamp(20px, calc(var(--card-w) * 0.0171), 9px) !important;
+  font-family: var(--font-script) !important;
+  font-size: clamp(1.42rem, calc(var(--card-w) * 0.0744), 2.02rem) !important;
+  font-weight: 400 !important;
+  line-height: .95 !important;
+  color: rgba(202, 124, 108, .76) !important;
+}
+
+.detail-date {
+  margin-top: clamp(10px, calc(var(--card-w) * 0.0122), 6px) !important;
+  font-family: var(--font-ui) !important;
+  font-size: clamp(.66rem, calc(var(--card-w) * 0.0287), .82rem) !important;
+  font-weight: 500 !important;
+  line-height: 1.15 !important;
+  letter-spacing: .24em !important;
+  text-transform: uppercase;
+  color: rgba(54, 41, 36, .9) !important;
+}
+
+.details-body .detail-separator {
+  display: block;
+  margin-block: clamp(10px, calc(var(--card-w) * 0.0098), 5px) !important;
+  width: clamp(30px, calc(var(--card-w) * 0.0976), 42px) !important;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(188, 128, 96, .48), transparent);
+}
+
+.detail-venue {
+  font-family: var(--font-ui) !important;
+  font-size: clamp(.86rem, calc(var(--card-w) * 0.0384), 1.08rem) !important;
+  font-weight: 500 !important;
+  line-height: 1.1 !important;
+  letter-spacing: .15em !important;
+  text-transform: uppercase;
+  color: rgba(188, 104, 82, .9) !important;
+}
+
+.detail-location {
+  font-family: var(--font-ui) !important;
+  font-size: clamp(.62rem, calc(var(--card-w) * 0.0250), .72rem) !important;
+  font-weight: 500 !important;
+  line-height: 1.2 !important;
+  letter-spacing: .17em !important;
+  text-transform: uppercase;
+  color: rgba(74, 58, 52, .82) !important;
+}
+
+/* Card 4: timeline */
+.timeline-card {
+  --stationery-after-hero: clamp(30px, calc(var(--card-w) * 0.0463), 24px);
+  --stationery-divider-top: clamp(24px, calc(var(--card-w) * 0.0366), 18px);
+}
+
+.timeline-body {
+  position: relative;
+  width: min(100%, 27ch);
+  display: grid;
+  margin: 20px auto 0;
+  line-height: 2;
+  gap: clamp(20px, calc(var(--card-w) * 0.0768), 30px);
+  padding-block: clamp(3px, calc(var(--card-w) * 0.0098), 6px);
+}
+
+.timeline-body::before {
+  content: "";
+  position: absolute;
+  top: clamp(20px, calc(var(--card-w) * 0.0693), 30px);
+  bottom: clamp(9px, calc(var(--card-w) * 0.0293), 13px);
+  left: calc(clamp(4.65rem, calc(var(--card-w) * 0.2195), 5.55rem) + clamp(7px, calc(var(--card-w) * 0.0207), 10px));
+  width: 1px;
+  background: linear-gradient(180deg, transparent, rgba(184, 126, 100, .48) 10%, rgba(184, 126, 100, .56) 90%, transparent);
+}
+
+.timeline-item {
+  position: relative;
+  display: grid;
+  grid-template-columns: clamp(4.65rem, calc(var(--card-w) * 0.2195), 5.55rem) clamp(14px, calc(var(--card-w) * 0.0439), 18px) 1fr;
+  align-items: center;
+  column-gap: clamp(7px, calc(var(--card-w) * 0.0207), 10px);
+  width: 100%;
+  min-height: clamp(22px, calc(var(--card-w) * 0.0756), 30px);
+}
+
+.timeline-dot {
+  position: relative;
+  z-index: 1;
+  justify-self: center;
+  width: clamp(5px, calc(var(--card-w) * 0.0171), 6px);
+  height: clamp(5px, calc(var(--card-w) * 0.0171), 6px);
+  border-radius: 999px;
+  background: rgba(132, 84, 66, .86);
+}
+
+.timeline-time {
+  display: block;
+  margin: 0;
+  font-family: var(--font-serif);
+  font-size: clamp(.84rem, calc(var(--card-w) * 0.0378), 1.04rem) !important;
+  font-weight: 500;
+  letter-spacing: .035em;
+  line-height: 1;
+  text-align: right;
+  white-space: nowrap;
+  color: rgba(116, 72, 55, .94);
+}
+
+.timeline-title {
+  display: block;
+  margin: 0;
+  font-family: var(--font-ui);
+  font-size: clamp(.57rem, calc(var(--card-w) * 0.0238), .68rem) !important;
+  font-weight: 600;
+  letter-spacing: .14em;
+  line-height: 1.15;
+  text-transform: uppercase;
+  color: rgba(54, 41, 36, .84);
+}
+
+/* Card 5: venue */
+.venue-card {
+  --stationery-after-hero: clamp(10px, calc(var(--card-w) * 0.0322), 15px);
+  --stationery-body-gap: clamp(7px, calc(var(--card-w) * 0.0220), 10px);
+  --stationery-divider-top: clamp(5px, calc(var(--card-w) * 0.0146), 8px);
+  --stationery-divider-bottom: clamp(14px, calc(var(--card-w) * 0.0415), 22px);
+}
+
+.venue-body {
+  width: min(100%, 30ch);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.venue-location {
+  margin: 20px 3px 6px;
+  font-size: clamp(.52rem, calc(var(--card-w) * 0.0177), .62rem);
+  line-height: 1.18;
+  letter-spacing: .055em;
+  color: rgba(88, 62, 55, .74);
+}
+
+.map-button {
+  position: relative;
+  z-index: 10;
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 21px;
+  margin-top: 6px;
+  margin-bottom: clamp(5px, calc(var(--card-w) * 0.0159), 7px);
+  padding: 3px 10px;
+  border-radius: 999px;
+  border: 1px solid rgba(201, 146, 112, .38);
+  background: rgba(255, 249, 241, .58);
+  color: var(--ink);
+  font-size: .52rem;
+  line-height: 1;
+  letter-spacing: .065em;
+  text-transform: uppercase;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.finding-us {
+  width: 100%;
+  text-align: center;
+}
+
+.finding-title {
+  margin: 10px 5px clamp(5px, calc(var(--card-w) * 0.0198), 7px);
+  font-family: var(--font-ui);
+  font-size: clamp(.78rem, calc(var(--card-w) * 0.0165), .66rem);
+  font-weight: 700;
+  line-height: 1;
+  letter-spacing: .105em;
+  text-transform: uppercase;
+  color: rgba(160, 109, 102, .86);
+}
+
+.venue-card .finding-us p {
+  margin: 5px 5px 0;
+  max-width: none;
+  font-size: clamp(.4rem, calc(var(--card-w) * 0.11), .54rem);
+  line-height: 1.3;
+  letter-spacing: .01em;
+  color: rgba(88, 62, 55, .78);
+}
+
+.finding-us strong {
+  padding-inline: .08em;
+  background: linear-gradient(180deg, transparent 55%, rgba(235, 184, 195, .38) 55%);
+  color: rgba(64, 42, 37, .96);
+  font-weight: 650;
+}
+
+.venue-photo {
+  width: 80%;
+  height: 170px;
+  margin-top: 10px;
+  border-radius: 15px;
+  overflow: hidden;
+  border: 1px solid rgba(221, 191, 198, .58);
+}
+
+.venue-photo img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center 20%;
+}
+
+/* Card 6: thank you and countdown */
+.thank-you-card {
+  --stationery-after-hero: clamp(30px, calc(var(--card-w) * 0.0788), 35px);
+  --stationery-body-gap: clamp(7px, calc(var(--card-w) * 0.0207), 10px);
+  --stationery-divider-top: clamp(19px, calc(var(--card-w) * 0.0537), 27px);
+  --stationery-divider-bottom: clamp(34px, calc(var(--card-w) * 0.0976), 48px);
+}
+
+.thank-you-body { width: min(100%, 28ch); }
+.thank-you-body p { margin: 10px 4px; line-height: 1.5; }
+
+.countdown {
+  width: 100%;
+  display: grid;
+  grid-template-columns: repeat(2, max-content);
+  justify-content: center;
+  justify-items: center;
+  align-items: center;
+  column-gap: 0;
+  row-gap: 0;
+  margin-top: clamp(8px, calc(var(--card-w) * 0.0244), 12px);
+  margin-inline: auto;
+  transform: translateX(-2px);
+}
+
+.countdown div {
+  position: relative;
+  isolation: isolate;
+  inline-size: clamp(94px, calc(var(--card-w) * 0.3049), 108px);
+  block-size: clamp(94px, calc(var(--card-w) * 0.3049), 108px);
+  padding: 0;
+  border: 0;
+  background: transparent;
+  overflow: hidden;
+  border-radius: 50%;
+  display: grid;
+  place-content: center;
+  gap: 3px;
+}
+
+.countdown div:nth-child(2),
+.countdown div:nth-child(4) { margin-left: -26px; }
+
+.countdown div:nth-child(3),
+.countdown div:nth-child(4) { margin-top: -16px; }
+
+.countdown div::before {
+  content: "";
+  position: absolute;
+  inset: -3%;
+  z-index: 0;
+  background-image: url('../assets/images/card7-frame-only.png');
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: 164% auto;
+  opacity: .78;
+  pointer-events: none;
+}
+
+.countdown div:nth-child(2)::before,
+.countdown div:nth-child(4)::before {
+  transform: scaleX(-1);
+  transform-origin: center;
+}
+
+.countdown strong,
+.countdown span {
+  position: relative;
+  z-index: 1;
+  text-align: center;
+}
+
+.countdown strong {
+  display: block;
+  font-family: 'Cormorant Garamond', serif;
+  font-size: clamp(1.5rem, calc(var(--card-w) * 0.0646), 1.82rem);
+  font-weight: 700;
+  line-height: .9;
+  letter-spacing: -0.04em;
+  color: rgba(74, 45, 41, .98);
+}
+
+.countdown span {
+  margin-top: 3px;
+  font-size: clamp(.46rem, calc(var(--card-w) * 0.0189), .54rem);
+  font-weight: 600;
+  letter-spacing: .115em;
+  text-transform: uppercase;
+  color: rgba(112, 74, 68, .76);
+}
+
+/* Card 7: image-only closing card */
+.image-card {
+  padding: clamp(18px, calc(var(--card-w) * 0.0537), 30px);
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  isolation: isolate;
+  background: #faf2ed;
+}
+
+.final-monogram-image {
+  width: min(104%, 520px);
+  max-height: 104%;
+  height: auto;
+  display: block;
+  object-fit: contain;
+  opacity: 1;
+  mix-blend-mode: normal;
+  -webkit-mask-image: linear-gradient(to right, transparent 0, #000 2.2%, #000 97.8%, transparent 100%),
+                      linear-gradient(to bottom, transparent 0, #000 2.2%, #000 97.8%, transparent 100%);
+  -webkit-mask-composite: source-in;
+  mask-image: linear-gradient(to right, transparent 0, #000 2.2%, #000 97.8%, transparent 100%),
+              linear-gradient(to bottom, transparent 0, #000 2.2%, #000 97.8%, transparent 100%);
+  mask-composite: intersect;
+  user-select: none;
+  pointer-events: none;
+  position: relative;
+  z-index: 1;
+}
+
+@media (max-width: 420px) {
+  .image-card { padding: clamp(12px, calc(var(--card-w) * 0.0463), 20px); }
+  .final-monogram-image {
+    width: min(106%, 390px);
+    max-height: 106%;
+  }
+}
+
+@media (max-width: 380px) {
+  .countdown { transform: translateX(-1px); }
+
+  .countdown div {
+    inline-size: clamp(90px, calc(var(--card-w) * 0.3293), 100px);
+    block-size: clamp(90px, calc(var(--card-w) * 0.3293), 100px);
+  }
+
+  .countdown div:nth-child(2),
+  .countdown div:nth-child(4) { margin-left: -24px; }
+
+  .countdown div:nth-child(3),
+  .countdown div:nth-child(4) { margin-top: -15px; }
+
+  .venue-card .finding-us p {
+    font-size: .52rem;
+    line-height: 1.24;
+  }
+
+  .venue-photo img {
+    height: 132px;
+    object-position: center 38%;
+  }
+}

@@ -1,0 +1,91 @@
+/* ================================
+   Project Tulip v2.0
+   Base styles and design tokens
+================================ */
+
+:root {
+  --card-w: min(82vw, 390px, calc((100svh - 132px) / 1.78));
+  --card-h: calc(var(--card-w) * 1.78);
+  --cover-w: calc(var(--card-w) / 2);
+  --folder-open-w: calc(var(--card-w) * 2);
+
+  --ivory: #fff8ef;
+  --paper: #fffdf7;
+  --paper-warm: #fff8ee;
+  --paper-edge: #ead3c5;
+  --folder-paper: #f7ddd6;
+  --folder-paper-deep: #eecbc3;
+  --blush: #f7e2df;
+  --rose-gold: #c99270;
+  --ink: #4f3933;
+  --muted: #8d6f65;
+  --shadow: rgba(79, 48, 38, 0.2);
+
+  --ease-luxury: cubic-bezier(.19, 1, .22, 1);
+  --ease-fold: cubic-bezier(.65, 0, .21, 1);
+}
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  min-height: 100svh;
+  overflow: hidden;
+  color: var(--ink);
+  font-family: Inter, system-ui, sans-serif;
+  background:
+    radial-gradient(circle at 50% 16%, rgba(255,255,255,.96), rgba(255,255,255,0) 35%),
+    radial-gradient(circle at 50% 78%, rgba(247,226,223,.42), rgba(247,226,223,0) 40%),
+    linear-gradient(145deg, #fff9f0 0%, #f9e7df 50%, #fff6ef 100%);
+}
+
+button, a { font: inherit; }
+
+.app {
+  min-height: 100svh;
+  display: grid;
+  place-items: center;
+  padding: 12px;
+}
+
+.stage {
+  position: relative;
+  width: min(100%, var(--folder-open-w));
+  height: min(100svh, calc(var(--card-h) + 104px));
+  display: grid;
+  place-items: center;
+  -webkit-perspective: 1800px;
+  perspective: 1800px;
+}
+
+
+h1, h2 {
+  font-family: 'Cormorant Garamond', serif;
+  font-weight: 500;
+  margin: 0;
+  line-height: .95;
+}
+
+h1 { font-size: clamp(3.1rem, 15vw, 5.6rem); }
+h2 { font-size: clamp(2.1rem, 9vw, 3.6rem); }
+
+button,
+.card-click-zone,
+.seal-trigger {
+  -webkit-tap-highlight-color: transparent;
+  -webkit-touch-callout: none;
+  -webkit-appearance: none;
+  appearance: none;
+}
+
+button:focus,
+button:active,
+button:focus-visible,
+.card-click-zone:focus,
+.card-click-zone:active,
+.card-click-zone:focus-visible,
+.seal-trigger:focus,
+.seal-trigger:active,
+.seal-trigger:focus-visible {
+  outline: none;
+}
