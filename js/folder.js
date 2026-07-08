@@ -7,8 +7,8 @@
     is what made the right cover glitch during close on iPhone.
 */
 function initFolder({ stage, openButton }) {
-  const OPEN_PRESS_DELAY = 80;
-  const CARD_READY_DELAY = 40;
+  const OPEN_PRESS_DELAY = 220;
+  const CARD_READY_DELAY = 80;
   const CLOSING_REPAINT_DELAY = 34;
 
   function nextFrame() {
@@ -59,7 +59,7 @@ function initFolder({ stage, openButton }) {
     const rightCover = stage.querySelector('.right-cover');
 
     stage.classList.add('is-opening');
-    stage.classList.remove('is-ready', 'is-closing');
+    stage.classList.remove('is-ready', 'is-closing', 'is-preparing-close');
 
     // Cards must already be inside the folder when the covers move.
     // They are visible but frozen by CSS until .is-ready is added.

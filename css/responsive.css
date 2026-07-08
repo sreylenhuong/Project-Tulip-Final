@@ -207,5 +207,176 @@
   }
 }
 
-/* Mobile uses the same 3D cover model as desktop.
-   We keep cards flat and static, but the covers remain rotateY folds. */
+/* ================================
+   iPhone/Safari clean animation model
+   One iPhone override only.
+
+   Safari was glitching because the normal mobile 3D rotateY covers can flicker
+   or repaint out of order on iPhone. This block keeps the normal 3D model for
+   desktop and Android, but changes iPhone Safari to one simpler physical model:
+   - Cards become visible immediately when opening starts, but sit behind covers.
+   - Covers slide open/closed as flat physical panels.
+   - Card stack does not animate during cover movement.
+   - Cards are hidden only after both covers finish closing.
+================================ */
+@supports (-webkit-touch-callout: none) {
+  @media (max-width: 640px) {
+    .stage,
+    .folder-system,
+    .base,
+    .cover,
+    .cover-print,
+    .seal-print,
+    .card-stack,
+    .card {
+      -webkit-transform-style: flat !important;
+      transform-style: flat !important;
+    }
+
+    .folder-system {
+      isolation: isolate;
+    }
+
+    .base {
+      z-index: 1;
+    }
+
+    .card-stack {
+      z-index: 4;
+      opacity: 0;
+      pointer-events: none;
+      -webkit-transform: translate3d(0, -10px, 0) scale(1);
+      transform: translate3d(0, -10px, 0) scale(1);
+      transition: opacity .22s ease;
+      will-change: auto;
+    }
+
+    .cover {
+      z-index: 8;
+      opacity: 1 !important;
+      visibility: visible !important;
+      -webkit-backface-visibility: hidden !important;
+      backface-visibility: hidden !important;
+      -webkit-transform: translate3d(0, 0, 0) !important;
+      transform: translate3d(0, 0, 0) !important;
+      transition: transform .9s var(--ease-fold) !important;
+      will-change: transform;
+    }
+
+    .left-cover {
+      -webkit-transform-origin: left center !important;
+      transform-origin: left center !important;
+    }
+
+    .right-cover {
+      -webkit-transform-origin: right center !important;
+      transform-origin: right center !important;
+    }
+
+    /* Opening/ready state: cards are already inside, above the base, below covers. */
+    .stage.is-opening .card-stack,
+    .stage.is-revealed .card-stack,
+    .stage.is-closing.is-open .card-stack {
+      opacity: 1 !important;
+      pointer-events: none !important;
+      -webkit-transform: translate3d(0, -10px, 0) scale(1) !important;
+      transform: translate3d(0, -10px, 0) scale(1) !important;
+      transition: none !important;
+    }
+
+    .stage.is-ready.is-revealed:not(.is-closing) .card-stack {
+      opacity: 1 !important;
+      pointer-events: auto !important;
+      -webkit-transform: translate3d(0, -10px, 0) scale(1) !important;
+      transform: translate3d(0, -10px, 0) scale(1) !important;
+      transition: none !important;
+    }
+
+    /* Close finished: only after is-open is removed should the cards disappear. */
+    .stage.is-closing:not(.is-open) .card-stack {
+      opacity: 0 !important;
+      pointer-events: none !important;
+      -webkit-transform: translate3d(0, -10px, 0) scale(1) !important;
+      transform: translate3d(0, -10px, 0) scale(1) !important;
+      transition: opacity .16s ease !important;
+    }
+
+    /* iPhone open state: flat sliding panels instead of Safari 3D rotation. */
+    .stage.is-open:not(.is-closing) .left-cover {
+      -webkit-transform: translate3d(-100%, 0, 0) !important;
+      transform: translate3d(-100%, 0, 0) !important;
+      box-shadow: -12px 14px 24px rgba(79, 48, 38, .10) !important;
+    }
+
+    .stage.is-open:not(.is-closing) .right-cover {
+      -webkit-transform: translate3d(100%, 0, 0) !important;
+      transform: translate3d(100%, 0, 0) !important;
+      box-shadow: 12px 14px 24px rgba(79, 48, 38, .10) !important;
+    }
+
+    /* Closing wins even while is-open remains on for card visibility. */
+    .stage.is-open.is-closing .left-cover,
+    .stage.is-closing .left-cover,
+    .stage.is-open.is-closing .right-cover,
+    .stage.is-closing .right-cover {
+      -webkit-transform: translate3d(0, 0, 0) !important;
+      transform: translate3d(0, 0, 0) !important;
+      box-shadow: none !important;
+    }
+
+    /* Freeze card layer during folder movement to avoid Card 1 first-open flicker. */
+    .stage.is-opening .card,
+    .stage.is-open:not(.is-ready) .card,
+    .stage.is-closing.is-open .card {
+      transition: none !important;
+      animation: none !important;
+      will-change: auto !important;
+    }
+
+    .stage.is-opening .card[data-position="active"],
+    .stage.is-open:not(.is-ready) .card[data-position="active"],
+    .stage.is-closing.is-open .card[data-position="active"] {
+      opacity: 1 !important;
+      -webkit-transform: translate3d(0, 0, 0) scale(1) rotateZ(0deg) !important;
+      transform: translate3d(0, 0, 0) scale(1) rotateZ(0deg) !important;
+    }
+
+    .stage.is-ready .card {
+      will-change: transform, opacity;
+    }
+
+    /* Lighter paper rendering on iPhone to reduce paint/compositing pressure. */
+    .card {
+      background:
+        radial-gradient(ellipse at 18% 12%, rgba(255,255,255,.64) 0%, rgba(255,255,255,0) 34%),
+        radial-gradient(ellipse at 82% 88%, rgba(229, 186, 190, .15) 0%, rgba(229, 186, 190, 0) 40%),
+        linear-gradient(145deg, #fffdf9 0%, #fff7f8 48%, #faeef1 100%);
+      border-color: rgba(196, 148, 153, .34);
+      box-shadow:
+        0 13px 26px rgba(83, 52, 55, .12),
+        0 2px 0 rgba(231, 205, 204, .72),
+        inset 0 1px 0 rgba(255,255,255,.82);
+      contain: layout paint;
+    }
+
+    .card::before,
+    .card.cover-card::before,
+    .image-card::before {
+      background-image: none !important;
+      background: none !important;
+      opacity: 0 !important;
+      mix-blend-mode: normal !important;
+    }
+
+    .card::after,
+    .image-card::after {
+      box-shadow: none !important;
+    }
+
+    .rings-mark,
+    .final-monogram-image {
+      filter: none !important;
+      mix-blend-mode: normal !important;
+    }
+  }
+}
