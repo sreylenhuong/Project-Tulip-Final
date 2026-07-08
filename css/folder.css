@@ -182,3 +182,49 @@
 .stage.is-opening .seal-trigger {
   pointer-events: none;
 }
+
+/* ==========================================
+   Wax Seal Luxury Shimmer
+========================================== */
+
+.seal-print {
+  position: relative;
+  overflow: hidden;
+  isolation: isolate;
+  border-radius: 50%;
+}
+
+.seal-print::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  background: linear-gradient(
+    120deg,
+    transparent 35%,
+    rgba(255, 255, 255, 0.45) 50%,
+    transparent 65%
+  );
+  transform: translateX(-120%);
+  animation: sealShimmer 3s ease-in-out infinite;
+  pointer-events: none;
+}
+
+@keyframes sealShimmer {
+  0% {
+    transform: translateX(-120%);
+  }
+
+  18% {
+    transform: translateX(120%);
+  }
+
+  100% {
+    transform: translateX(120%);
+  }
+}
+
+.stage.is-opening .seal-print::after,
+.stage.is-open .seal-print::after {
+  animation: none;
+}

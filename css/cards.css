@@ -577,12 +577,64 @@
   border: 1px solid rgba(201, 146, 112, .38);
   background: rgba(255, 249, 241, .58);
   color: var(--ink);
-  font-size: .52rem;
+  font-size: .62rem;
   line-height: 1;
   letter-spacing: .065em;
   text-transform: uppercase;
   text-decoration: none;
   cursor: pointer;
+}
+
+/*map button hover effect*/
+.map-button {
+  position: relative;
+  overflow: hidden;
+  isolation: isolate;
+}
+
+/* soft luxury shimmer */
+.map-button::after {
+  content: "";
+  position: absolute;
+  inset: -40%;
+  background: linear-gradient(
+    120deg,
+    transparent 35%,
+    rgba(255, 255, 255, 0.65) 50%,
+    transparent 65%
+  );
+  transform: translateX(-120%);
+  animation: mapShimmer 3.8s ease-in-out infinite;
+  pointer-events: none;
+}
+
+/* gentle clickable glow */
+.map-button {
+  box-shadow:
+    0 8px 18px rgba(160, 104, 95, 0.16),
+    0 0 0 1px rgba(214, 173, 160, 0.35);
+  transition:
+    transform 0.35s ease,
+    box-shadow 0.35s ease;
+}
+
+.map-button:hover,
+.map-button:focus-visible {
+  transform: translateY(-1px);
+  box-shadow:
+    0 12px 24px rgba(160, 104, 95, 0.22),
+    0 0 0 1px rgba(214, 173, 160, 0.55);
+}
+
+@keyframes mapShimmer {
+  0% {
+    transform: translateX(-120%);
+  }
+
+  45%,
+  100% {
+    transform: translateX(120%);
+  }
 }
 
 .finding-us {
