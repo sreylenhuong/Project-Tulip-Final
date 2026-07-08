@@ -398,8 +398,8 @@
       transform: translate3d(0, -3px, 0) scale(1) rotateZ(0deg) !important;
       opacity: 1 !important;
       z-index: 14;
-      -webkit-animation: iphone-return-card-right .56s cubic-bezier(.18, .78, .16, 1) both;
-      animation: iphone-return-card-right .56s cubic-bezier(.18, .78, .16, 1) both;
+      -webkit-animation: iphone-return-card-right .72s cubic-bezier(.18, .78, .16, 1) both;
+      animation: iphone-return-card-right .72s cubic-bezier(.18, .78, .16, 1) both;
     }
 
     .stage.is-open.is-ready[data-nav="prev"] .card[data-position="next"] {
