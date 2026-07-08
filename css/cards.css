@@ -604,7 +604,7 @@
     transparent 65%
   );
   transform: translateX(-120%);
-  animation: mapShimmer 3.8s ease-in-out infinite;
+  animation: mapShimmer 2s ease-in-out infinite;
   pointer-events: none;
 }
 
