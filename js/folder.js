@@ -69,8 +69,7 @@ function initFolder({ stage, openButton, audio }) {
 
     window.setTimeout(async () => {
       await twoPaints();
-
-      audio?.playFolderOpen();
+      
       stage.classList.add('is-open');
       openButton.setAttribute('aria-expanded', 'true');
 

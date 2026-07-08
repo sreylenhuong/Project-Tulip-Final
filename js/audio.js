@@ -11,7 +11,7 @@ function initAudio() {
 
   const sounds = {
     seal: new Audio('audio/seal.mp3'),
-    folderOpen: new Audio('audio/folder-open.mp3'),
+    
     cardSlide: new Audio('audio/paper-slide.mp3'),
     music: new Audio('audio/music.m4r')
   };
@@ -21,13 +21,12 @@ function initAudio() {
   let hasUserInteracted = false;
 
   sounds.seal.preload = 'auto';
-  sounds.folderOpen.preload = 'auto';
+  
   sounds.cardSlide.preload = 'auto';
   sounds.music.preload = 'auto';
   sounds.music.loop = true;
 
-  sounds.seal.volume = 0.02;
-  sounds.folderOpen.volume = 0;
+  sounds.seal.volume = 0.2;
   sounds.cardSlide.volume = 0.18;
   sounds.music.volume = 0;
 
@@ -101,9 +100,6 @@ function initAudio() {
     safePlay(sounds.seal);
   }
 
-  function playFolderOpen() {
-    safePlay(sounds.folderOpen);
-  }
 
   function playCardSlide() {
     safePlay(sounds.cardSlide);
@@ -136,7 +132,6 @@ function initAudio() {
 
   return {
     playSeal,
-    playFolderOpen,
     playCardSlide,
     startMusic,
     stopMusic
