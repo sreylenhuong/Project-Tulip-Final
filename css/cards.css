@@ -254,7 +254,7 @@
 /* Shared text defaults */
 .eyebrow {
   margin: 0 0 22px;
-  font-size: .68rem;
+  font-size: .75rem;
   letter-spacing: .24em;
   text-transform: uppercase;
   color: var(--rose-gold);

@@ -7,7 +7,7 @@
 function initAudio() {
   const FADE_STEP_MS = 80;
   const MUSIC_MAX_VOLUME = 0.50;
-  const CARD_SOUND_MAX_MS = 460;
+  const CARD_SOUND_MAX_MS = 300;
 
   const sounds = {
     seal: new Audio('audio/seal.mp3'),
@@ -27,7 +27,7 @@ function initAudio() {
   sounds.music.loop = true;
 
   sounds.seal.volume = 0.42;
-  sounds.folderOpen.volume = 0.30;
+  sounds.folderOpen.volume = 0.09;
   sounds.cardSlide.volume = 0.18;
   sounds.music.volume = 0;
 
