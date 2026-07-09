@@ -142,38 +142,10 @@
 .left-cover .cover-print { left: 0; }
 .right-cover .cover-print { right: 0; }
 
-/* Printed divider below cover title */
-.cover-divider {
-  position: absolute;
-  top: 35%;
-  left: 50%;
-  width: 118px;
-  height: 1px;
-  transform: translateX(-50%);
-  background: linear-gradient(
-    90deg,
-    transparent,
-    rgba(154, 88, 82, .24),
-    transparent
-  );
-  pointer-events: none;
-}
-
-.cover-divider::before {
-  content: "♥";
-  position: absolute;
-  left: 50%;
-  top: 50%;
-  transform: translate(-50%, -56%);
-  padding: 0 8px;
-  font-size: 1.5rem;
-  color: rgba(154, 88, 82, .42);
-  background: transparent;
-}
 
 .cover-title {
   position: absolute;
-  top: 31%;
+  top: 20%;
   left: 0;
   width: 100%;
   text-align: center;

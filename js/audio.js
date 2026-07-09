@@ -6,7 +6,7 @@
 */
 function initAudio() {
   const FADE_STEP_MS = 30;
-  const MUSIC_MAX_VOLUME = 0.50;
+  const MUSIC_MAX_VOLUME = 1;
   const CARD_SOUND_MAX_MS = 300;
 
   const sounds = {
