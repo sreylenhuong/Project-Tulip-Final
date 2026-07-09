@@ -21,7 +21,7 @@ h2,
 }
 
 /* Closed folder cover: the words are treated like ink printed into the cover. */
-.cover-title { top: 20%; }
+.cover-title { top: 17%; }
 
 .cover-title span {
   display: block;
