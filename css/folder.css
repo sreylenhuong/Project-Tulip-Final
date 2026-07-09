@@ -277,10 +277,8 @@
   left: var(--cover-w);
   top: 0;
   z-index: 25;
-
   width: var(--card-w);
   height: var(--card-h);
-
   pointer-events: none;
 }
 
@@ -288,10 +286,8 @@
   position: absolute;
   left: 50%;
   top: 47%;
-
   width: 112px;
   height: 112px;
-
   transform: translate(-50%, -50%);
   display: block;
   object-fit: contain;
@@ -302,6 +298,7 @@
 .stage.is-closing .seal-overlay {
   opacity: 0;
 }
+
 .seal-trigger {
   z-index: 30;
 }

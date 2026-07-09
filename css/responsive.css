@@ -119,6 +119,23 @@
     height: clamp(98px, calc(var(--card-w) * 0.285), 116px);
   }
 
+.seal-overlay {
+  left: 0;
+  top: 0;
+  width: var(--card-w);
+  height: var(--card-h);
+  transform: none;
+}
+
+.seal-overlay img {
+  position: absolute;
+  left: 50%;
+  top: 47%;
+  width: clamp(98px, calc(var(--card-w) * 0.285), 116px);
+  height: clamp(98px, calc(var(--card-w) * 0.285), 116px);
+  transform: translate(-50%, -50%);
+}
+
   .timeline-body {
     width: min(100%, 29ch);
     gap: clamp(10px, calc(var(--card-w) * 0.0326), 14px);
