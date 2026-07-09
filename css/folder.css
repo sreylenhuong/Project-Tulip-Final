@@ -126,13 +126,26 @@
   transform-style: preserve-3d;
 }
 
+/* Luxury embossed frame */
+.cover-print::after {
+  content: "";
+  position: absolute;
+  inset: 15px;
+  border: 2px solid rgba(255,255,255,.28);
+  box-shadow:
+    inset 0 0 0 1px rgba(170,120,110,.12);
+  border-radius: 2px;
+  pointer-events: none;
+  z-index: 1;
+}
+
 .left-cover .cover-print { left: 0; }
 .right-cover .cover-print { right: 0; }
 
 /* Printed divider below cover title */
 .cover-divider {
   position: absolute;
-  top: 34%;
+  top: 35%;
   left: 50%;
   width: 118px;
   height: 1px;
@@ -191,7 +204,7 @@
   position: absolute;
   left: 50%;
   top: 47%;
-  z-index: 24;
+  z-index: 30;
   width: 116px;
   height: 116px;
   border: 0;
@@ -256,4 +269,31 @@
 .stage.is-opening .seal-print::after,
 .stage.is-open .seal-print::after {
   animation: none;
+}
+
+/* Full closed-cover seal overlay */
+.seal-overlay {
+  position: absolute;
+  left: calc(var(--cover-w) + (var(--card-w) / 2));
+  top: 47%;
+  z-index: 23;
+  width: 112px;
+  height: 112px;
+  transform: translate(-50%, -50%);
+  pointer-events: none;
+  border-radius: 50%;
+  overflow: hidden;
+}
+
+.seal-overlay img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+.stage.is-opening .seal-overlay,
+.stage.is-open .seal-overlay,
+.stage.is-closing .seal-overlay {
+  opacity: 0;
 }
