@@ -274,9 +274,9 @@
 /* Full closed-cover seal overlay */
 .seal-overlay {
   position: absolute;
-  left: calc(var(--cover-w) + (var(--card-w) / 2));
+  left: calc(var(--cover-w) + var(--card-w) / 2);
   top: 47%;
-  z-index: 23;
+  z-index: 25;
   width: 112px;
   height: 112px;
   transform: translate(-50%, -50%);
@@ -296,4 +296,8 @@
 .stage.is-open .seal-overlay,
 .stage.is-closing .seal-overlay {
   opacity: 0;
+}
+
+.seal-trigger {
+  z-index: 30;
 }
